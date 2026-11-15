@@ -37,3 +37,10 @@ All photos are from Unsplash and used under the [Unsplash License](https://unspl
 | granola.jpg | [unsplash.com/photos/qj_zfYm-sdI](https://unsplash.com/photos/qj_zfYm-sdI) | Natalie Behn |
 | barista.jpg | [unsplash.com/photos/N76Cadq2wQs](https://unsplash.com/photos/N76Cadq2wQs) | Oksana Demenko |
 | baristas.jpg | [unsplash.com/photos/fdUwaeewqt8](https://unsplash.com/photos/fdUwaeewqt8) | Vincent Leyva |
+| shak1.jpg | [unsplash.com/photos/hYPzhjvTZE4](https://unsplash.com/photos/hYPzhjvTZE4) | Nafsika G. |
+| pastry.jpg | [unsplash.com/photos/4hbCj6m11To](https://unsplash.com/photos/4hbCj6m11To) | Octavio Fossatti |
+| bread.jpg | [unsplash.com/photos/7N8amvEYF-0](https://unsplash.com/photos/7N8amvEYF-0) | Colin Michel |
+| mushrooms.jpg | [unsplash.com/photos/bEgpca34KYk](https://unsplash.com/photos/bEgpca34KYk) | Sadia Alam |
+| frenchtoast.jpg | [unsplash.com/photos/zcUgjyqEwe8](https://unsplash.com/photos/zcUgjyqEwe8) | Joseph Gonzalez |
+| frenchtoast2.jpg | [unsplash.com/photos/yUQmFofH-Aw](https://unsplash.com/photos/yUQmFofH-Aw) | gabbiistudios |
+| sandwich.jpg | [unsplash.com/photos/NaKjzmlAEjU](https://unsplash.com/photos/NaKjzmlAEjU) | Seb Reivers |
