@@ -67,6 +67,7 @@ n8n runs on a local PC and polls the site, so no tunnel is needed. The site neve
   - `order_placed`: send the confirmation email (only when the guest gave an email)
   - `order_ready`: send the "your order is ready" email
   - `big_order`: Telegram alert to the owner (£60 or more, or 10 items or more)
+  - `newsletter_signup`: add the email to the mailing list sheet
   - `order_late`: Telegram alert when an order has waited too long
 - `POST /api/outbox/ack` with `{ "ids": [1, 2, 3] }` marks events as sent.
 - `GET /api/summary?day=YYYY-MM-DD` returns the day's orders, takings and best sellers for the end-of-day report.

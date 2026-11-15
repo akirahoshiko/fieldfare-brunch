@@ -36,6 +36,9 @@
     SOLD = {}; DATA.soldOut.forEach(function (id) { SOLD[id] = true; });
     renderStatus(DATA.status);
     renderMenu();
+    renderSpecials();
+    renderNums(DATA.status);
+    loadQuickSlots();
     // Drop anything from a saved order that has since sold out or left the menu.
     var before = order.length;
     order = order.filter(function (l) { return ITEMS[l.id] && !SOLD[l.id]; });
@@ -48,11 +51,84 @@
     if (st.paused) h.innerHTML = '<span><span class="closed"></span>' + esc(st.label) + "</span>";
     else if (st.asapOpen) h.innerHTML = '<span><span class="live"></span>Open now, food ready in about ' + st.waitMin + " minutes</span><span>" + ic("clock") + "Today until " + esc(st.closesAt) + "</span>";
     else h.innerHTML = '<span><span class="closed"></span>' + esc(st.label) + "</span>" + (st.orderDay ? "<span>" + ic("clock") + "You can order ahead for " + esc(st.orderDay.label) + "</span>" : "");
-    $("#stripWait").textContent = st.asapOpen ? "Ready in about " + st.waitMin + " minutes" : "Order ahead for later";
+    $("#stripWait").textContent = st.asapOpen ? "Ready in about " + st.waitMin + " minutes" : "Order ahead";
     $("#hours").innerHTML = st.hours.map(function (d) { return '<li class="' + (d.today ? "today " : "") + (d.hours === "Closed" ? "closed" : "") + '"><span>' + esc(d.day) + (d.today ? " (today)" : "") + "</span><span>" + esc(d.hours) + "</span></li>"; }).join("");
     $("#lastOrder").textContent = st.lastOrderNote;
     $("#menuNotice").innerHTML = st.paused ? '<div class="notice" style="margin-bottom:20px">' + ic("alert") + "<span>" + esc(st.label) + " You can still look through the menu.</span></div>" : "";
+    $("#fHours").innerHTML = st.hours.map(function (d) { return "<li>" + esc(d.day) + ", " + esc(d.hours === "Closed" ? "closed" : d.hours) + "</li>"; }).join("");
   }
+
+  /* ---------- today's specials ---------- */
+  var SPECIALS = ["garlic-mushrooms", "french-toast", "turkish-eggs", "hash-brown-stack"];
+  function renderSpecials() {
+    $("#spList").innerHTML = SPECIALS.filter(function (id) { return ITEMS[id]; }).map(function (id) {
+      var it = ITEMS[id], sold = !!SOLD[id];
+      return '<li class="' + (sold ? "sold" : "") + '"><button type="button" data-id="' + id + '"' + (sold ? ' aria-disabled="true"' : "") + '><span class="n">' + esc(it.name) + '</span><span class="p">' + (sold ? "Sold out" : gbp(it.price)) + '</span><span class="d">' + esc(it.desc) + "</span></button></li>";
+    }).join("");
+  }
+  $("#spList").addEventListener("click", function (e) { var b = e.target.closest("[data-id]"); if (b && !SOLD[b.dataset.id]) openDish(ITEMS[b.dataset.id]); });
+
+  /* ---------- live numbers (real figures only) ---------- */
+  function renderNums(st) {
+    var n = 0; Object.keys(ITEMS).forEach(function (id) { if (!SOLD[id]) n++; });
+    $("#nDishes").textContent = n;
+    $("#nWait").textContent = st.asapOpen ? "About " + st.waitMin + " min" : st.paused ? "Paused" : "Closed now";
+    if (st.closesAt) { $("#nOpen").textContent = "Until " + st.closesAt; $("#nOpenLabel").textContent = "Open today"; }
+    else {
+      var next = st.hours.filter(function (d) { return d.hours !== "Closed"; });
+      $("#nOpen").textContent = st.orderDay ? cap(st.orderDay.label) : "Soon";
+      $("#nOpenLabel").textContent = "We open next" + (next.length ? ", " + next[0].hours.split(" to ")[0] : "");
+    }
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* ---------- quick pickup times in the order-ahead band ---------- */
+  var preferred = store.get("ff-when", null);
+  function loadQuickSlots() {
+    fetch("/api/slots").then(function (r) { return r.json(); }).then(function (s) {
+      var box = $("#bandSlots");
+      var firstFree = (s.slots || []).filter(function (x) { return !x.full; })[0];
+      $("#nSlot").textContent = s.asap ? "Right now" : firstFree ? (s.day.label === "today" ? "" : cap(s.day.label) + " ") + firstFree.label : "None left";
+      if (s.paused || (!s.asap && !s.slots.length)) { box.innerHTML = '<p class="fine">' + esc(s.message || "There are no pickup times left right now.") + "</p>"; return; }
+      var open = s.slots.filter(function (x) { return !x.full; }).slice(0, 6);
+      box.innerHTML = (s.asap ? '<button type="button" class="qslot asap" data-asap="1">As soon as possible, about ' + s.asap.waitMin + " min</button>" : "") +
+        (s.day.label !== "today" || !s.asap ? '<p class="qday">' + esc(cap(s.day.label)) + "</p>" : "") +
+        open.map(function (x) { return '<button type="button" class="qslot" data-day="' + s.day.date + '" data-min="' + x.min + '">' + x.label + "</button>"; }).join("");
+      markQuick();
+    }).catch(function () { $("#bandSlots").innerHTML = '<p class="fine">Pickup times will show at checkout.</p>'; });
+  }
+  function markQuick() {
+    document.querySelectorAll(".qslot").forEach(function (b) {
+      var on = !!preferred && (preferred.asap ? !!b.dataset.asap : b.dataset.day === preferred.day && Number(b.dataset.min) === preferred.min);
+      b.setAttribute("aria-pressed", String(on));
+    });
+  }
+  $("#bandSlots").addEventListener("click", function (e) {
+    var b = e.target.closest(".qslot"); if (!b) return;
+    preferred = b.dataset.asap ? { asap: true } : { day: b.dataset.day, min: Number(b.dataset.min) };
+    store.set("ff-when", preferred); markQuick();
+    $("#bandNote").textContent = "Saved. Now choose your food below, and we'll use this time at checkout.";
+  });
+
+  /* ---------- photo card shortcut to a menu section ---------- */
+  document.querySelector(".trio").addEventListener("click", function (e) {
+    var c = e.target.closest("[data-tab]"); if (!c) return;
+    var t = document.getElementById("tab-" + c.dataset.tab); if (!t) return;
+    $("#menu").scrollIntoView({ behavior: "smooth" });
+    setTimeout(function () { selectTab(t); }, 450);
+  });
+
+  /* ---------- mailing list ---------- */
+  $("#nl").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var msg = $("#nlMsg"), email = $("#nlEmail").value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.textContent = "Please check your email address."; return; }
+    msg.textContent = "Adding you…";
+    fetch("/api/newsletter", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: email }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d.ok) { msg.textContent = "Thanks, you're on the list."; $("#nlEmail").value = ""; } else msg.textContent = d.error || "That didn't work. Please try again."; })
+      .catch(function () { msg.textContent = "No connection. Please try again."; });
+  });
 
   /* ---------- menu screens ---------- */
   var tabs = $("#tabs"), screens = $("#screens");
@@ -179,6 +255,14 @@
       slots = s;
       if (when && when.asap && !s.asap) when = null;
       if (when && !when.asap && !(s.day && s.day.date === when.day && s.slots.some(function (x) { return x.min === when.min && !x.full && x.left >= count(); }))) when = null;
+      // Use the time picked in the order-ahead band, if it is still free and big enough.
+      if (!when && preferred) {
+        if (preferred.asap && s.asap) when = { asap: true };
+        else if (!preferred.asap && s.day && s.day.date === preferred.day && s.slots.some(function (x) { return x.min === preferred.min && !x.full && x.left >= count(); })) {
+          when = { day: preferred.day, min: preferred.min };
+          showAll = showAll || s.slots.findIndex(function (x) { return x.min === preferred.min; }) >= 9;
+        }
+      }
       if (!when && s.asap) when = { asap: true };
       if (step === "details") draw();
     }).catch(function () { slots = { paused: true, message: "We couldn't load pickup times. Please check your connection and try again.", slots: [] }; if (step === "details") draw(); });
@@ -241,7 +325,7 @@
   var links = [].slice.call(document.querySelectorAll(".links a"));
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) links.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id); }); }); }, { rootMargin: "-40% 0px -55% 0px" });
-    ["menu", "how", "about", "visit"].forEach(function (id) { io.observe(document.getElementById(id)); });
+    links.forEach(function (a) { var el = document.getElementById(a.getAttribute("href").slice(1)); if (el) io.observe(el); });
   }
 
   bar(); load();

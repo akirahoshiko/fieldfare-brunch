@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/home.css">
 <link rel="preload" as="image" href="/img/room.jpg">
 </head>
 <body>
@@ -29,37 +30,68 @@
   <symbol id="i-chef" viewBox="0 0 24 24"><path d="M7 14v6h10v-6"/><path d="M7 14a4 4 0 1 1 1.5-7.7A4 4 0 0 1 15.5 6.3 4 4 0 1 1 17 14Z"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3v3M12 3v3"/></symbol>
+  <symbol id="i-egg" viewBox="0 0 24 24"><path d="M12 3c-3.5 0-6.5 5.4-6.5 10A6.5 6.5 0 0 0 12 19.5 6.5 6.5 0 0 0 18.5 13C18.5 8.4 15.5 3 12 3Z"/><circle cx="12" cy="13" r="2.5"/></symbol>
+  <symbol id="i-wheat" viewBox="0 0 24 24"><path d="M12 21V9"/><path d="M12 13c-2.5 0-4-1.5-4-4 2.5 0 4 1.5 4 4Zm0 0c2.5 0 4-1.5 4-4-2.5 0-4 1.5-4 4Zm0-4c-2.5 0-4-1.5-4-4 2.5 0 4 1.5 4 4Zm0 0c2.5 0 4-1.5 4-4-2.5 0-4 1.5-4 4Zm0 8c-2.5 0-4-1.5-4-4 2.5 0 4 1.5 4 4Zm0 0c2.5 0 4-1.5 4-4-2.5 0-4 1.5-4 4Z"/></symbol>
 </svg>
 
 <header class="site-head">
   <div class="in">
     <a class="logo" href="/"><b>Fieldfare</b><span>Stoke Newington</span></a>
-    <nav class="links" aria-label="Main"><a href="#menu">Menu</a><a href="#how">How to order</a><a href="#about">About us</a><a href="#visit">Visit us</a></nav>
+    <nav class="links" aria-label="Main"><a href="#menu">Menu</a><a href="#specials">Specials</a><a href="#order">Order ahead</a><a href="#about">About us</a><a href="#visit">Visit us</a></nav>
     <button class="btn btn-primary sm head-btn" type="button" id="navOrder"><svg class="i"><use href="#i-bag"/></svg><span class="lbl">Your order</span><span class="count" id="navCount">0</span></button>
   </div>
 </header>
 
 <main id="top">
+  <!-- Hero with the highlights sitting in its bottom edge (after The Olive & Oak) -->
   <section class="hero">
     <img src="/img/room.jpg" alt="Inside Fieldfare on a weekday morning" fetchpriority="high">
-    <div class="in">
+    <div class="in hero-in">
       <div class="hcopy">
         <span class="where">Brunch on Church Street, N16</span>
         <h1>Good food for slow mornings, <em>ready when you are.</em></h1>
         <p>Eggs, fresh bakes and proper coffee, cooked to order. Order online for pickup and pay when you collect.</p>
-        <div class="hrow"><a class="btn btn-primary" href="#menu" id="heroOrder">Order for pickup <svg class="i"><use href="#i-arrow"/></svg></a><a class="btn btn-light" href="#menu">See the menu</a></div>
+        <div class="hrow"><a class="btn btn-primary" href="#menu" id="heroOrder">Order for pickup <svg class="i"><use href="#i-arrow"/></svg></a><a class="btn btn-light" href="#specials">Today's specials</a></div>
         <div class="status" id="heroStatus" aria-live="polite"><span>Checking today's hours…</span></div>
       </div>
+      <ul class="hfeats" aria-label="Good to know">
+        <li><svg class="i"><use href="#i-chef"/></svg><span><b>Cooked to order</b>Made fresh for you</span></li>
+        <li><svg class="i"><use href="#i-clock"/></svg><span><b id="stripWait">Ready in about 15 min</b>Or choose a later time</span></li>
+        <li><svg class="i"><use href="#i-coin"/></svg><span><b>Pay when you collect</b>Card or cash</span></li>
+        <li><svg class="i"><use href="#i-leaf"/></svg><span><b>Vegan and gluten-free</b>Marked on every dish</span></li>
+      </ul>
     </div>
   </section>
 
-  <section class="strip" aria-label="Good to know">
-    <div class="in">
-      <div><span class="ic"><svg class="i"><use href="#i-chef"/></svg></span><span><b>Cooked to order</b><small>Made fresh when you order</small></span></div>
-      <div><span class="ic"><svg class="i"><use href="#i-clock"/></svg></span><span><b id="stripWait">Ready in about 15 minutes</b><small>Or choose a later time</small></span></div>
-      <div><span class="ic"><svg class="i"><use href="#i-coin"/></svg></span><span><b>Pay when you collect</b><small>Card or cash at the counter</small></span></div>
-      <div><span class="ic"><svg class="i"><use href="#i-leaf"/></svg></span><span><b>Vegan and gluten-free</b><small>Marked on every dish</small></span></div>
+  <!-- Live numbers row (after Verdeo), with real numbers only -->
+  <div class="in">
+    <div class="nums" aria-label="Live from the kitchen">
+      <div class="num"><span class="ic"><svg class="i"><use href="#i-clock"/></svg></span><span><b id="nWait">…</b><small>Wait for food right now</small></span></div>
+      <div class="num"><span class="ic"><svg class="i"><use href="#i-bag"/></svg></span><span><b id="nSlot">…</b><small>Next pickup time</small></span></div>
+      <div class="num"><span class="ic"><svg class="i"><use href="#i-cup"/></svg></span><span><b id="nOpen">…</b><small id="nOpenLabel">Open today</small></span></div>
+      <div class="num"><span class="ic"><svg class="i"><use href="#i-egg"/></svg></span><span><b id="nDishes">…</b><small>Dishes on today</small></span></div>
     </div>
+  </div>
+
+  <!-- Three photo cards with text on the image (after Goodwish) -->
+  <section class="in sec trio" aria-label="Ways to enjoy Fieldfare">
+    <a class="tcard" href="#order"><img src="/img/shak1.jpg" alt="" loading="lazy"><span class="tx"><b>Order ahead</b><span>Skip the weekend queue. Pick a time and walk straight in.</span><em>Choose a time <svg class="i"><use href="#i-arrow"/></svg></em></span></a>
+    <button class="tcard" type="button" data-tab="bakes"><img src="/img/pastry.jpg" alt="" loading="lazy"><span class="tx"><b>Fresh from 8am</b><span>Buns, croissants and banana bread, baked here every morning.</span><em>See the bakes <svg class="i"><use href="#i-arrow"/></svg></em></span></button>
+    <a class="tcard" href="#visit"><img src="/img/sandwich.jpg" alt="" loading="lazy"><span class="tx"><b>Take it to the park</b><span>Everything is wrapped to go. Clissold Park is five minutes away.</span><em>How to find us <svg class="i"><use href="#i-arrow"/></svg></em></span></a>
+  </section>
+
+  <!-- Specials as a printed list beside two large photos (after Seasonal plates) -->
+  <section class="in sec specials" id="specials">
+    <div class="sp-text">
+      <span class="eyebrow">This weekend</span>
+      <h2>Today's specials</h2>
+      <p>A few plates we're especially proud of right now. Tap one to add it to your order.</p>
+      <ul class="sp-list" id="spList"></ul>
+      <a class="link-arrow" href="#menu">See the full menu <svg class="i"><use href="#i-arrow"/></svg></a>
+    </div>
+    <figure class="sp-ph a"><img src="/img/frenchtoast.jpg" alt="Brioche French toast with banana and blueberries" loading="lazy"></figure>
+    <figure class="sp-ph b"><img src="/img/bread.jpg" alt="A table of brunch plates seen from above" loading="lazy"></figure>
   </section>
 
   <section class="in sec" id="menu">
@@ -70,24 +102,45 @@
     <p class="allergy">Allergies? Every dish lists its allergens, and you can add a note to your order. If you have a severe allergy, please talk to us at the counter before ordering.</p>
   </section>
 
-  <section class="in sec" id="how" style="padding-top:24px">
-    <div class="how">
-      <div class="ph"><img src="/img/barista.jpg" alt="A barista at work by the café window" loading="lazy"></div>
-      <div>
-        <div class="shead"><span class="eyebrow">Ordering ahead</span><h2>Skip the queue in three easy steps</h2></div>
-        <ol class="steps">
-          <li><span class="n">1</span><div><b>Choose your food</b><p>Pick from the menu and add any extras you like.</p></div></li>
-          <li><span class="n">2</span><div><b>Pick a pickup time</b><p>As soon as possible, or a time that suits you later.</p></div></li>
-          <li><span class="n">3</span><div><b>Collect and pay</b><p>Your order page shows when it's ready. Pay at the counter by card or cash.</p></div></li>
-        </ol>
-        <a class="btn btn-dark" href="#menu">Start your order <svg class="i"><use href="#i-arrow"/></svg></a>
+  <!-- Order-ahead band with quick time buttons (after the donation amounts on Alone) -->
+  <section class="band" id="order">
+    <img src="/img/barista.jpg" alt="" loading="lazy">
+    <div class="in band-in">
+      <div class="band-tx">
+        <span class="eyebrow light">Ordering ahead</span>
+        <h2>Skip the queue, <em>not breakfast.</em></h2>
+        <p>Choose your food, pick a time, and your order page shows when it's ready. Pay at the counter when you collect.</p>
+        <ol class="mini-steps"><li><span>1</span>Choose your food</li><li><span>2</span>Pick a time</li><li><span>3</span>Collect and pay</li></ol>
+      </div>
+      <div class="band-card">
+        <h3>When would you like it?</h3>
+        <div class="qslots" id="bandSlots" role="group" aria-label="Pickup time"><p class="fine">Finding pickup times…</p></div>
+        <p class="fine" id="bandNote">You can change this at checkout.</p>
+        <a class="btn btn-primary wide" href="#menu">Choose your food <svg class="i"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </section>
 
+  <!-- Dark green cards with gold icons (after Lapaz) -->
+  <section class="why sec" aria-labelledby="whyTitle">
+    <div class="in">
+      <div class="shead light"><span class="eyebrow light">Why people come back</span><h2 id="whyTitle">Small kitchen, good ingredients</h2></div>
+      <div class="why-grid">
+        <div class="wcard"><span class="wic"><svg class="i"><use href="#i-wheat"/></svg></span><h3>Bread from down the road</h3><p>Sourdough and rye from a neighbourhood bakery, delivered every morning.</p></div>
+        <div class="wcard"><span class="wic"><svg class="i"><use href="#i-cup"/></svg></span><h3>Coffee roasted in London</h3><p>A house blend, always a double shot, with oat and soy milk for 40p.</p></div>
+        <div class="wcard"><span class="wic"><svg class="i"><use href="#i-leaf"/></svg></span><h3>A menu that follows the seasons</h3><p>We change a few plates as the produce changes, so there's usually something new.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overlapping tilted photo cards (after Hopenest) -->
   <section class="about sec" id="about">
     <div class="in grid">
-      <div class="pair"><img class="a" src="/img/plating.jpg" alt="Our cook finishing a dish in the kitchen" loading="lazy"><img class="b" src="/img/baristas.jpg" alt="Two of our team behind the counter" loading="lazy"></div>
+      <div class="tilt">
+        <img class="a" src="/img/plating.jpg" alt="Our cook finishing a dish in the kitchen" loading="lazy">
+        <img class="b" src="/img/baristas.jpg" alt="Two of our team behind the counter" loading="lazy">
+        <span class="tilt-badge"><b>12</b>seats at one long table</span>
+      </div>
       <div>
         <div class="shead"><span class="eyebrow">About us</span><h2>A small kitchen with a long table</h2></div>
         <p>Fieldfare is a twelve-seat brunch spot on Church Street. Most weekends there's a queue out the door by ten, so we made it easy to order ahead and walk straight in.</p>
@@ -116,14 +169,33 @@
       </div>
     </div>
   </section>
+
+  <!-- Questions that open and close (after Hopenest) -->
+  <section class="in sec faq" id="faq">
+    <div class="shead"><span class="eyebrow">Good to know</span><h2>Questions we get asked</h2><p>Something else on your mind? Ask us at the counter, we're happy to help.</p></div>
+    <div class="qa">
+      <details><summary>Do you deliver?</summary><p>No, we're pickup only. Order online, choose a time, and collect from the counter on Church Street.</p></details>
+      <details><summary>How do I pay?</summary><p>At the counter when you collect, by card or cash. Nothing is charged online.</p></details>
+      <details><summary>How will I know my order is ready?</summary><p>After you order you get your own order page that updates by itself: received, being prepared, ready. If you give us your email, we'll also email you when it's ready.</p></details>
+      <details><summary>I have an allergy. Can I still order?</summary><p>Every dish lists its allergens, and you can add a note for the kitchen. Our kitchen handles nuts, gluten and dairy, so we can't promise anything is completely free of them. If your allergy is severe, please talk to us before ordering.</p></details>
+      <details><summary>Can I order for later, or for tomorrow?</summary><p>Yes. Pick any 15-minute time that's still open. When we're closed, you can order ahead for our next opening day.</p></details>
+      <details><summary>What if I need to change my order?</summary><p>Tell us when you arrive, or place a new order and mention it at the counter. If the kitchen hasn't started yet, we'll happily change it.</p></details>
+    </div>
+  </section>
 </main>
 
-<footer>
-  <div class="in">
-    <a class="logo" href="/"><b>Fieldfare</b></a>
-    <nav aria-label="Footer"><a href="#menu">Menu</a><a href="#how">How to order</a><a href="#about">About us</a><a href="#visit">Visit us</a></nav>
-    <div class="credit"><span>© 2026 Fieldfare</span><span>A project by Peace Ejiga</span></div>
+<!-- Column footer (after Verdeo) with a mailing list box (after The Olive & Oak) -->
+<footer class="foot">
+  <div class="in fgrid">
+    <div class="fcol"><a class="logo" href="/"><b>Fieldfare</b></a><p>A small brunch kitchen on Church Street. Cooked to order, ready for pickup.</p></div>
+    <div class="fcol"><h4>Explore</h4><ul><li><a href="#menu">Menu</a></li><li><a href="#specials">Today's specials</a></li><li><a href="#order">Ordering ahead</a></li><li><a href="#faq">Questions</a></li></ul></div>
+    <div class="fcol"><h4>Opening hours</h4><ul id="fHours"><li>Wednesday to Sunday, 8am to 3pm</li><li>Monday and Tuesday, closed</li></ul></div>
+    <div class="fcol"><h4>Join our mailing list</h4><p>New specials and the odd early opening. No spam.</p>
+      <form class="nl" id="nl" novalidate><label class="sr" for="nlEmail">Email address</label><input id="nlEmail" type="email" autocomplete="email" placeholder="Your email" maxlength="120"><button class="btn btn-primary sm" type="submit">Join</button></form>
+      <p class="nl-msg" id="nlMsg" role="status" aria-live="polite"></p>
+    </div>
   </div>
+  <div class="in fbot"><span>© 2026 Fieldfare · Church Street, Stoke Newington, London N16</span><span>A project by Peace Ejiga</span></div>
 </footer>
 
 <dialog class="dish" id="dish" aria-labelledby="dTitle">

@@ -61,7 +61,7 @@ button{font-family:inherit}
 .tk.warn{border-top-color:var(--warn)}
 .tk.late{border-top-color:var(--late)}
 .tk.later{border-top-color:#55625B;opacity:.85}
-.tk.fresh{animation:flash 1.2s ease 3}
+.tk.fresh{box-shadow:0 0 0 3px var(--gold);animation:flash 1.2s ease 3}
 @keyframes flash{50%{box-shadow:0 0 0 4px var(--gold)}}
 @media (prefers-reduced-motion:reduce){.tk.fresh{animation:none;box-shadow:0 0 0 3px var(--gold)}}
 .tk .h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}

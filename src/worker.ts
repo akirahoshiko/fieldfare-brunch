@@ -82,6 +82,11 @@ export default {
       const r = await pass(env).placeOrder(input as never, await ipHash(req, env));
       return r.ok ? json(r, 201) : err(r.error, r.error.startsWith("You've placed") ? 429 : 400, r.field);
     }
+    if (p === "/api/newsletter" && m === "POST") {
+      const b = await body<{ email?: string }>(req);
+      const r = await pass(env).subscribe(b?.email, await ipHash(req, env));
+      return r.ok ? json(r) : err(r.error!);
+    }
     const orderMatch = p.match(/^\/api\/orders\/([\w-]{10,40})$/);
     if (orderMatch && m === "GET") {
       const o = await pass(env).getOrder(orderMatch[1]);

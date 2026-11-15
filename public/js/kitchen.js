@@ -120,7 +120,7 @@
   }
   function card(o, nowMin) {
     var t = timing(o, nowMin), mine = ticks[o.id] || [];
-    var fresh = flashIds[o.id] && Date.now() - flashIds[o.id] < 4000 ? " fresh" : "";
+    var fresh = flashIds[o.id] && Date.now() - flashIds[o.id] < 60000 ? " fresh" : "";
     return '<article class="tk ' + t.cls + fresh + '" data-id="' + o.id + '"><div class="h"><span class="no">' + pad(o.number) + '</span><span class="t">' + t.text + "</span></div>" +
       '<div class="who"><span>' + esc(o.name) + "</span>" + (o.asap ? "<span>As soon as possible</span>" : '<span class="due">For ' + clockLabel(o.slotMin) + "</span>") + "</div>" +
       "<ul>" + o.items.map(function (l, i) { var done = mine.indexOf(i) > -1; return '<li class="' + (done ? "done" : "") + '"><button type="button" data-tick="' + i + '" aria-pressed="' + done + '">' + l.qty + " × " + esc(l.name) + (l.options.length ? "<small>" + esc(l.options.join(", ")) + "</small>" : "") + "</button></li>"; }).join("") + "</ul>" +

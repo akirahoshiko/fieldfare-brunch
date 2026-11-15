@@ -195,7 +195,8 @@ dialog::backdrop{background:rgba(14,30,21,.55)}
 
 /* order bar */
 .obar{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:40;display:flex;align-items:center;gap:14px;background:var(--green);color:var(--cream);border-radius:99px;padding:7px 7px 7px 20px;box-shadow:0 20px 50px -12px rgba(0,0,0,.45);transition:transform .35s cubic-bezier(.2,.7,.1,1);max-width:calc(100% - 24px)}
-.obar.show{transform:translate(-50%,0)}
+.obar{visibility:hidden}
+.obar.show{transform:translate(-50%,0);visibility:visible}
 .obar .sum{font-size:14.5px;white-space:nowrap}
 .obar .sum b{color:var(--gold2);margin-left:6px}
 

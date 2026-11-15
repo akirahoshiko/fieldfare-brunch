@@ -47,6 +47,7 @@ export class Pass extends DurableObject<Env> {
       CREATE TABLE IF NOT EXISTS soldout (item TEXT PRIMARY KEY, day TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS outbox (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, created INTEGER NOT NULL, payload TEXT NOT NULL, sent INTEGER NOT NULL DEFAULT 0);
       CREATE TABLE IF NOT EXISTS rate (ip TEXT NOT NULL, ts INTEGER NOT NULL);
+      CREATE TABLE IF NOT EXISTS newsletter (email TEXT PRIMARY KEY, created INTEGER NOT NULL);
     `);
     // Lets connected screens check the line is alive without waking this object.
     ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair("ping", "pong"));
@@ -183,6 +184,22 @@ export class Pass extends DurableObject<Env> {
     if (total >= BIG_ORDER_PENCE || itemCount >= BIG_ORDER_ITEMS) this.enqueue("big_order", this.alertPayload(o));
     this.broadcast(o);
     return { ok: true, token, number };
+  }
+
+  /* ---------- mailing list ---------- */
+  subscribe(rawEmail: unknown, ipHash: string): { ok: boolean; error?: string } {
+    const email = clean(rawEmail, 120).toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { ok: false, error: "That email address doesn't look quite right." };
+    const now = Date.now(), key = `nl:${ipHash}`;
+    this.sql.exec("DELETE FROM rate WHERE ts < ?", now - 15 * 60_000);
+    if ((this.sql.exec<{ n: number }>("SELECT COUNT(*) AS n FROM rate WHERE ip = ?", key).toArray()[0]?.n ?? 0) >= 5) return { ok: false, error: "Please try again in a few minutes." };
+    this.sql.exec("INSERT INTO rate (ip, ts) VALUES (?, ?)", key, now);
+    const isNew = !this.sql.exec("SELECT 1 FROM newsletter WHERE email = ?", email).toArray().length;
+    if (isNew) {
+      this.sql.exec("INSERT INTO newsletter (email, created) VALUES (?, ?)", email, now);
+      this.enqueue("newsletter_signup", { email, created: now });
+    }
+    return { ok: true };
   }
 
   /* ---------- views ---------- */
