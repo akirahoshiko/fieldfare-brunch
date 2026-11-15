@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /kitchen
+Disallow: /owner
+Disallow: /order/
+Disallow: /api/

@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fieldfare-brunch",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-10-01",
+
+  // Static pages, styles, scripts and photos. The Worker only runs first for
+  // the API, the live connections and the per-order pages.
+  "assets": {
+    "directory": "public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*", "/ws/*", "/order/*"]
+  },
+
+  // One Durable Object ("the pass") holds today's orders and pushes every
+  // change to the kitchen screen and to each guest's order page.
+  "durable_objects": {
+    "bindings": [{ "name": "PASS", "class_name": "Pass" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Pass"] }],
+
+  "vars": {
+    "SITE_URL": "https://fieldfare-brunch.peaceomachunyiejiga.workers.dev"
+  },
+
+  // Secrets live in Cloudflare, never in this file:
+  //   STAFF_PASSWORD  kitchen screen login
+  //   OWNER_PASSWORD  owner page login
+  //   SESSION_SECRET  signs the login cookie
+  //   OUTBOX_TOKEN    lets n8n read the outbox
+  "observability": { "enabled": true }
+}

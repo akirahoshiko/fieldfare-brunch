@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fieldfare · Brunch in Stoke Newington</title>
+<meta name="description" content="Fieldfare is a small brunch kitchen on Church Street, Stoke Newington. Order online for pickup and pay when you collect.">
+<meta name="theme-color" content="#16301F">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="preload" as="image" href="/img/room.jpg">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19 13 11"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-chef" viewBox="0 0 24 24"><path d="M7 14v6h10v-6"/><path d="M7 14a4 4 0 1 1 1.5-7.7A4 4 0 0 1 15.5 6.3 4 4 0 1 1 17 14Z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+</svg>
+
+<header class="site-head">
+  <div class="in">
+    <a class="logo" href="/"><b>Fieldfare</b><span>Stoke Newington</span></a>
+    <nav class="links" aria-label="Main"><a href="#menu">Menu</a><a href="#how">How to order</a><a href="#about">About us</a><a href="#visit">Visit us</a></nav>
+    <button class="btn btn-primary sm head-btn" type="button" id="navOrder"><svg class="i"><use href="#i-bag"/></svg><span class="lbl">Your order</span><span class="count" id="navCount">0</span></button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <img src="/img/room.jpg" alt="Inside Fieldfare on a weekday morning" fetchpriority="high">
+    <div class="in">
+      <div class="hcopy">
+        <span class="where">Brunch on Church Street, N16</span>
+        <h1>Good food for slow mornings, <em>ready when you are.</em></h1>
+        <p>Eggs, fresh bakes and proper coffee, cooked to order. Order online for pickup and pay when you collect.</p>
+        <div class="hrow"><a class="btn btn-primary" href="#menu" id="heroOrder">Order for pickup <svg class="i"><use href="#i-arrow"/></svg></a><a class="btn btn-light" href="#menu">See the menu</a></div>
+        <div class="status" id="heroStatus" aria-live="polite"><span>Checking today's hours…</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="strip" aria-label="Good to know">
+    <div class="in">
+      <div><span class="ic"><svg class="i"><use href="#i-chef"/></svg></span><span><b>Cooked to order</b><small>Made fresh when you order</small></span></div>
+      <div><span class="ic"><svg class="i"><use href="#i-clock"/></svg></span><span><b id="stripWait">Ready in about 15 minutes</b><small>Or choose a later time</small></span></div>
+      <div><span class="ic"><svg class="i"><use href="#i-coin"/></svg></span><span><b>Pay when you collect</b><small>Card or cash at the counter</small></span></div>
+      <div><span class="ic"><svg class="i"><use href="#i-leaf"/></svg></span><span><b>Vegan and gluten-free</b><small>Marked on every dish</small></span></div>
+    </div>
+  </section>
+
+  <section class="in sec" id="menu">
+    <div class="shead"><span class="eyebrow">Our menu</span><h2>What we're cooking today</h2><p>Choose a section below. Tap a dish to see the details and pick your bread, milk or extras.</p></div>
+    <div id="menuNotice"></div>
+    <div class="tabbar"><div class="tabs" role="tablist" aria-label="Menu sections" id="tabs"></div></div>
+    <div id="screens"><div class="cards"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
+    <p class="allergy">Allergies? Every dish lists its allergens, and you can add a note to your order. If you have a severe allergy, please talk to us at the counter before ordering.</p>
+  </section>
+
+  <section class="in sec" id="how" style="padding-top:24px">
+    <div class="how">
+      <div class="ph"><img src="/img/barista.jpg" alt="A barista at work by the café window" loading="lazy"></div>
+      <div>
+        <div class="shead"><span class="eyebrow">Ordering ahead</span><h2>Skip the queue in three easy steps</h2></div>
+        <ol class="steps">
+          <li><span class="n">1</span><div><b>Choose your food</b><p>Pick from the menu and add any extras you like.</p></div></li>
+          <li><span class="n">2</span><div><b>Pick a pickup time</b><p>As soon as possible, or a time that suits you later.</p></div></li>
+          <li><span class="n">3</span><div><b>Collect and pay</b><p>Your order page shows when it's ready. Pay at the counter by card or cash.</p></div></li>
+        </ol>
+        <a class="btn btn-dark" href="#menu">Start your order <svg class="i"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about sec" id="about">
+    <div class="in grid">
+      <div class="pair"><img class="a" src="/img/plating.jpg" alt="Our cook finishing a dish in the kitchen" loading="lazy"><img class="b" src="/img/baristas.jpg" alt="Two of our team behind the counter" loading="lazy"></div>
+      <div>
+        <div class="shead"><span class="eyebrow">About us</span><h2>A small kitchen with a long table</h2></div>
+        <p>Fieldfare is a twelve-seat brunch spot on Church Street. Most weekends there's a queue out the door by ten, so we made it easy to order ahead and walk straight in.</p>
+        <p>Our bread comes from a bakery down the road, the coffee is roasted in London, and the menu changes with the seasons.</p>
+        <span class="sig">See you in the morning.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="in sec" id="visit">
+    <div class="shead"><span class="eyebrow">Visit us</span><h2>Opening hours and how to find us</h2></div>
+    <div class="visit">
+      <div class="vcard"><h3>Opening hours</h3>
+        <ul class="hours" id="hours">
+          <li><span>Wednesday to Sunday</span><span>8am to 3pm</span></li>
+          <li class="closed"><span>Monday and Tuesday</span><span>Closed</span></li>
+        </ul>
+        <p class="fine" style="margin-top:12px" id="lastOrder">Online orders close 30 minutes before we do.</p>
+      </div>
+      <div class="vcard"><h3>Find us</h3>
+        <div class="contact">
+          <div><svg class="i"><use href="#i-pin"/></svg><span>Church Street, Stoke Newington<small>London N16. Ten minutes' walk from Stoke Newington station.</small></span></div>
+          <div><svg class="i"><use href="#i-coin"/></svg><span>Paying<small>Card or cash at the counter. Nothing is charged online.</small></span></div>
+          <div><svg class="i"><use href="#i-leaf"/></svg><span>Dogs welcome<small>Well-behaved dogs are welcome at the counter.</small></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="in">
+    <a class="logo" href="/"><b>Fieldfare</b></a>
+    <nav aria-label="Footer"><a href="#menu">Menu</a><a href="#how">How to order</a><a href="#about">About us</a><a href="#visit">Visit us</a></nav>
+    <div class="credit"><span>© 2026 Fieldfare</span><span>A project by Peace Ejiga</span></div>
+  </div>
+</footer>
+
+<dialog class="dish" id="dish" aria-labelledby="dTitle">
+  <div class="dwrap">
+    <div class="dimg"><img id="dImg" alt=""></div>
+    <div class="dbody">
+      <button class="x" type="button" id="dClose" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button>
+      <div class="tags" id="dTags"></div>
+      <h3 id="dTitle">Dish</h3>
+      <p class="lead" id="dDesc"></p>
+      <div class="allergen" id="dAll"></div>
+      <div id="dOpts" style="display:grid;gap:18px"></div>
+      <div class="dfoot"><div class="qty"><button type="button" id="qMinus" aria-label="One less">−</button><output id="qOut">1</output><button type="button" id="qPlus" aria-label="One more">+</button></div><button class="btn btn-dark" type="button" id="dAdd">Add to order, <span id="dTotal">£0.00</span></button></div>
+    </div>
+  </div>
+</dialog>
+
+<div class="obar" id="obar" role="status" aria-live="polite"><span class="sum"><span id="oItems">0 items</span><b id="oTotal">£0.00</b></span><button class="btn btn-primary sm" type="button" id="oOpen">View order</button></div>
+<dialog class="panel" id="panel" aria-labelledby="pTitle"><div class="pn" id="pn"></div></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/js/home.js" defer></script>
+</body>
+</html>

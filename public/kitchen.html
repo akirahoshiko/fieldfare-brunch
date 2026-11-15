@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kitchen · Fieldfare</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0E1411">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/kitchen.css">
+</head>
+<body>
+<!-- Sign in -->
+<section class="gate" id="login" hidden>
+  <form class="gate-card" id="loginForm" novalidate>
+    <b class="brand">Fieldfare kitchen</b>
+    <h1>Sign in to the kitchen screen</h1>
+    <label for="pw">Kitchen password</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <p class="gate-err" id="loginErr" hidden></p>
+    <button class="kbtn primary" type="submit">Sign in</button>
+    <p class="gate-note">Staff only. Ask the owner if you need the password.</p>
+  </form>
+</section>
+
+<!-- Start of service: unlocks sound and keeps the screen awake -->
+<section class="gate" id="start" hidden>
+  <div class="gate-card">
+    <b class="brand">Fieldfare kitchen</b>
+    <h1>Ready for service?</h1>
+    <p>Tap below to switch on order sounds and keep this screen awake.</p>
+    <button class="kbtn primary big" type="button" id="startBtn">Start service</button>
+  </div>
+</section>
+
+<div class="board" id="board" hidden>
+  <header class="kbar">
+    <div class="kleft"><b class="brand">Fieldfare</b><span class="conn" id="conn"><i></i><span>Connecting…</span></span><span class="clock" id="clock"></span></div>
+    <div class="allday" id="allday" aria-label="Still to cook"></div>
+    <div class="kright">
+      <button class="kbtn" type="button" id="soundBtn" aria-pressed="true">Sound on</button>
+      <button class="kbtn" type="button" id="soldBtn">Sold out</button>
+      <button class="kbtn" type="button" id="recallBtn">Recall</button>
+      <button class="kbtn ghost" type="button" id="outBtn">Sign out</button>
+    </div>
+  </header>
+  <div class="offline" id="offline" hidden>Connection lost. Reconnecting… Your taps are saved and will be sent when we're back.</div>
+  <div class="paused" id="paused" hidden>Online orders are paused. Guests can't place new orders right now.</div>
+  <main class="cols">
+    <section class="col" aria-labelledby="hNew"><h2 id="hNew">New <span id="cNew">0</span></h2><div class="list" id="lNew"></div></section>
+    <section class="col" aria-labelledby="hPrep"><h2 id="hPrep">In progress <span id="cPrep">0</span></h2><div class="list" id="lPrep"></div></section>
+    <section class="col" aria-labelledby="hReady"><h2 id="hReady">Ready <span id="cReady">0</span></h2><div class="list" id="lReady"></div></section>
+  </main>
+</div>
+
+<div class="undo" id="undo" hidden><span id="undoMsg"></span><button class="kbtn" type="button" id="undoBtn">Undo</button></div>
+
+<dialog class="sheet" id="recall" aria-labelledby="recallTitle">
+  <div class="sheet-in"><header><h2 id="recallTitle">Recently collected</h2><button class="kbtn ghost" type="button" data-close>Close</button></header><div id="recallList"></div></div>
+</dialog>
+<dialog class="sheet" id="sold" aria-labelledby="soldTitle">
+  <div class="sheet-in"><header><h2 id="soldTitle">Sold out today</h2><button class="kbtn ghost" type="button" data-close>Close</button></header><p class="muted">Tap a dish to mark it sold out. It comes back on tomorrow by itself.</p><div id="soldList" class="soldgrid"></div></div>
+</dialog>
+
+<script src="/js/kitchen.js" defer></script>
+</body>
+</html>

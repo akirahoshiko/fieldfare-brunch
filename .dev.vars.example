@@ -1,0 +1,7 @@
+# Copy this file to .dev.vars for local development only.
+# .dev.vars is ignored by git. Real values go in Cloudflare:
+#   npx wrangler secret put STAFF_PASSWORD   (and the others)
+STAFF_PASSWORD=change-me-kitchen
+OWNER_PASSWORD=change-me-owner
+SESSION_SECRET=any-long-random-string
+OUTBOX_TOKEN=another-long-random-string

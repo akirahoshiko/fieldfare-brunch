@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Owner · Fieldfare</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16301F">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+  .ow{padding-block:32px 72px;display:grid;gap:20px}
+  .ow h1{font-size:40px}
+  .ow-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .stat{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 1px 0 var(--line)}
+  .stat b{display:block;font:600 34px/1.1 var(--serif)}
+  .stat span{color:var(--mute);font-size:14px}
+  .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+  .box{background:var(--card);border-radius:20px;padding:22px;box-shadow:0 1px 0 var(--line);display:grid;gap:14px}
+  .box h2{font-size:28px}
+  .box p{margin:0;color:var(--mute);font-size:14.5px}
+  .switch{display:flex;align-items:center;gap:12px;font-weight:600}
+  .switch input{width:22px;height:22px;accent-color:var(--green)}
+  .field input[type=time]{max-width:140px}
+  .hrow2{display:grid;grid-template-columns:120px auto 1fr;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .hrow2:last-of-type{border-bottom:0}
+  .hrow2 .times{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .hrow2 input[type=time]{border-radius:10px;border:1.5px solid var(--line);padding:6px 8px;font:500 14px var(--sans);background:#fff;color:var(--ink)}
+  .hrow2 input[type=time]:disabled{opacity:.4}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--mute);font-weight:600}
+  td.r,th.r{text-align:right}
+  .pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:12.5px;font-weight:600;background:var(--sage);color:var(--green2)}
+  .pill.ready{background:#F6EACB;color:#6B5212}.pill.cancelled{background:#F8E3DC;color:var(--red)}.pill.collected{background:#E7ECE9;color:var(--mute)}
+  .linkbtn{border:0;background:none;color:var(--red);font:600 13px var(--sans);cursor:pointer;padding:0}
+  .soldwrap{display:grid;gap:6px}
+  .soldwrap label{display:flex;align-items:center;gap:10px;font-size:15px;padding:4px 0}
+  .soldwrap input{width:18px;height:18px;accent-color:var(--red)}
+  .soldwrap h3{font:600 15px var(--sans);color:var(--mute);margin:8px 0 0}
+  .tablewrap{overflow-x:auto}
+  @media (max-width:900px){.ow-grid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-head"><div class="in" style="grid-template-columns:1fr auto"><a class="logo" href="/"><b>Fieldfare</b><span>Owner</span></a><span style="display:flex;gap:8px"><a class="btn btn-light sm" href="/kitchen">Kitchen screen</a><button class="btn btn-light sm" type="button" id="out" hidden>Sign out</button></span></div></header>
+
+<main class="in ow" id="gate" hidden>
+  <form class="box" id="loginForm" style="max-width:420px" novalidate>
+    <h1 style="font-size:34px">Owner sign in</h1>
+    <div class="field"><label for="pw">Owner password</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <p class="err" id="loginErr" hidden></p>
+    <button class="btn btn-dark" type="submit">Sign in</button>
+  </form>
+</main>
+
+<main class="in ow" id="app" hidden>
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap"><h1>Today at Fieldfare</h1><span class="fine" id="dayLabel"></span></div>
+  <div class="ow-grid">
+    <div class="stat"><b id="sOrders">0</b><span>Orders today</span></div>
+    <div class="stat"><b id="sTakings">£0.00</b><span>Taken at the counter</span></div>
+    <div class="stat"><b id="sExpected">£0.00</b><span>Expected by close</span></div>
+    <div class="stat"><b id="sWaiting">0</b><span>Ready, not collected</span></div>
+  </div>
+  <div class="two">
+    <section class="box">
+      <h2>Online orders</h2>
+      <label class="switch"><input type="checkbox" id="pauseOn"> Pause online orders</label>
+      <div class="field"><label for="pauseMsg">Message for guests <small>(optional)</small></label><input id="pauseMsg" maxlength="200" placeholder="We're very busy. Back in about 20 minutes."></div>
+      <button class="btn btn-dark" type="button" id="pauseSave">Save</button>
+      <p id="pauseNote"></p>
+    </section>
+    <section class="box">
+      <h2>Best sellers today</h2>
+      <ol id="best" style="margin:0;padding-left:20px;display:grid;gap:6px"></ol>
+    </section>
+  </div>
+  <section class="box">
+    <h2>Today's orders</h2>
+    <div class="tablewrap"><table><thead><tr><th>No.</th><th>Name</th><th>Pickup</th><th>Items</th><th class="r">Total</th><th>Status</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
+  <div class="two">
+    <section class="box"><h2>Sold out today</h2><p>Ticked dishes show as sold out until tomorrow morning.</p><div class="soldwrap" id="sold"></div></section>
+    <section class="box"><h2>Opening hours</h2><p>Online orders stop 30 minutes before closing.</p><div id="hours"></div><p class="err" id="hoursErr" hidden></p><button class="btn btn-dark" type="button" id="hoursSave">Save opening hours</button><p id="hoursNote"></p></section>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="/js/owner.js" defer></script>
+</body>
+</html>
