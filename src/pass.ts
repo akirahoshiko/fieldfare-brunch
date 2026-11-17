@@ -1,5 +1,6 @@
 import { DurableObject } from "cloudflare:workers";
 import { MENU, OPTIONS, priceLine, findItem, type CartLine, type PricedLine } from "./menu";
+import { placedEmail, readyEmail, bigOrderText, lateOrderText, orderRow, mailingRow, summaryText, summaryRow, type Action, type MailOrder, type AlertOrder } from "./messages";
 import { london, DEFAULT_HOURS, LAST_ORDER_BEFORE_CLOSE, SLOT_MINUTES, nextOrderDay, dayLabel, clock, hhmm, DAY_NAMES, type Hours } from "./time";
 
 /** Items one 15-minute pickup slot can take before it closes. */
@@ -180,7 +181,8 @@ export class Pass extends DurableObject<Env> {
       id, token, number, day, now, asap, slotMin, name, phone, email, notes, JSON.stringify(priced), itemCount, total, now, ipHash);
     const o = this.row(id)!;
 
-    if (email) this.enqueue("order_placed", this.mailPayload(o));
+    // Always queued: it logs the order to the sheet, and emails the guest when they gave an address.
+    this.enqueue("order_placed", this.mailPayload(o));
     if (total >= BIG_ORDER_PENCE || itemCount >= BIG_ORDER_ITEMS) this.enqueue("big_order", this.alertPayload(o));
     this.broadcast(o);
     return { ok: true, token, number };
@@ -311,7 +313,7 @@ export class Pass extends DurableObject<Env> {
   private enqueue(type: string, payload: unknown) { this.sql.exec("INSERT INTO outbox (type, created, payload) VALUES (?, ?, ?)", type, Date.now(), JSON.stringify(payload)); }
   private statusUrl(o: OrderRow) { return `${this.env.SITE_URL}/order/${o.token}`; }
   private mailPayload(o: OrderRow) {
-    return { id: o.id, number: o.number, name: o.name, email: o.email, pickup: this.pickupLabel(o), total: o.total, items: (JSON.parse(o.items) as PricedLine[]).map((l) => ({ name: l.name, qty: l.qty, options: l.options, total: l.total })), notes: o.notes, statusUrl: this.statusUrl(o) };
+    return { id: o.id, number: o.number, name: o.name, email: o.email, phone: o.phone, pickup: this.pickupLabel(o), total: o.total, items: (JSON.parse(o.items) as PricedLine[]).map((l) => ({ name: l.name, qty: l.qty, options: l.options, total: l.total })), notes: o.notes, statusUrl: this.statusUrl(o) };
   }
   private alertPayload(o: OrderRow) {
     return { id: o.id, number: o.number, name: o.name, pickup: this.pickupLabel(o), total: o.total, items: o.item_count, status: o.status, waitingMin: Math.round((Date.now() - o.created) / 60_000) };
@@ -324,7 +326,24 @@ export class Pass extends DurableObject<Env> {
        AND ((asap = 1 AND created < ?) OR (asap = 0 AND slot_min + 5 < ?))`, now.date, Date.now() - 20 * 60_000, now.min).toArray() as OrderRow[];
     for (const o of late) { this.enqueue("order_late", this.alertPayload(o)); this.sql.exec("UPDATE orders SET late_alerted = 1 WHERE id = ?", o.id); }
     return this.sql.exec<{ id: number; type: string; created: number; payload: string }>("SELECT id, type, created, payload FROM outbox WHERE sent = 0 ORDER BY id LIMIT ?", limit)
-      .toArray().map((r) => ({ id: r.id, type: r.type, created: r.created, data: JSON.parse(r.payload) }));
+      .toArray().map((r) => this.action(r.id, r.type, r.created, JSON.parse(r.payload)));
+  }
+  /** Turns a stored event into ready-to-send pieces: an email, a Telegram message and a sheet row. */
+  private action(id: number, type: string, created: number, data: Record<string, unknown>): Action {
+    const a: Action = { id, type, email: null, telegram: null, sheet: null };
+    if (type === "order_placed") { const o = data as unknown as MailOrder; if (o.email) a.email = placedEmail(o); a.sheet = orderRow(o, created); }
+    else if (type === "order_ready") { const o = data as unknown as MailOrder; if (o.email) a.email = readyEmail(o); }
+    else if (type === "big_order") a.telegram = bigOrderText(data as unknown as AlertOrder);
+    else if (type === "order_late") a.telegram = lateOrderText(data as unknown as AlertOrder);
+    else if (type === "newsletter_signup") a.sheet = mailingRow(String(data.email), Number(data.created) || created);
+    return a;
+  }
+  /** End-of-day report for n8n, with the Telegram text and sheet row already written. */
+  summary(day = london().date) {
+    const r = this.report(day);
+    const dow = new Date(day + "T12:00:00Z").getUTCDay();
+    const open = !!this.hours()[String(dow)];
+    return { day, open, report: r, telegram: summaryText(r, open), sheet: open || r.orders ? summaryRow(r) : null };
   }
   ack(ids: number[]) {
     const clean = ids.map(Number).filter((n) => Number.isInteger(n)).slice(0, 200);

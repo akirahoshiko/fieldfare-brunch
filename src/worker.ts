@@ -147,7 +147,7 @@ export default {
       if (!env.OUTBOX_TOKEN || !safeEqual(auth, `Bearer ${env.OUTBOX_TOKEN}`)) return err("Not allowed", 401);
       if (p === "/api/outbox" && m === "GET") return json({ events: await pass(env).outbox() });
       if (p === "/api/outbox/ack" && m === "POST") { const b = await body<{ ids?: number[] }>(req); return json(await pass(env).ack(Array.isArray(b?.ids) ? b!.ids! : [])); }
-      if (p === "/api/summary" && m === "GET") return json(await pass(env).report(url.searchParams.get("day") ?? undefined));
+      if (p === "/api/summary" && m === "GET") { const d = url.searchParams.get("day"); return json(await pass(env).summary(d && /^d{4}-d{2}-d{2}$/.test(d) ? d : undefined)); }
     }
 
     return err("Not found", 404);

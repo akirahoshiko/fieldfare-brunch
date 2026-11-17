@@ -1,0 +1,452 @@
+{
+  "id": "FfOrderMessages1",
+  "name": "Fieldfare · Order messages",
+  "nodes": [
+    {
+      "id": "ff-1",
+      "name": "About",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -300
+      ],
+      "parameters": {
+        "content": "## Fieldfare: order messages\nEvery minute, collects new events from the website's outbox and, for each one:\n1. emails the guest (confirmation or \"your order is ready\"), when they gave an email\n2. alerts you on Telegram about big or late orders\n3. logs orders and mailing-list sign-ups in Google Sheets\n4. tells the website it's done\n\nThe website writes all the wording. If a step fails, the event is not marked done and is tried again next minute. Nothing is lost while this PC is off.",
+        "width": 520,
+        "height": 240
+      }
+    },
+    {
+      "id": "ff-2",
+      "name": "Every minute",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ff-3",
+      "name": "Get new events",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "url": "https://fieldfare-brunch.peaceomachunyiejiga.workers.dev/api/outbox",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Fieldfare API"
+        }
+      }
+    },
+    {
+      "id": "ff-4",
+      "name": "Split out events",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "fieldToSplitOut": "events",
+        "options": {}
+      }
+    },
+    {
+      "id": "ff-5",
+      "name": "Email to send?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c4",
+              "leftValue": "={{ !!$('Split out events').item.json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "ff-6",
+      "name": "Email the guest",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        -100
+      ],
+      "parameters": {
+        "sendTo": "={{ $('Split out events').item.json.email.to }}",
+        "subject": "={{ $('Split out events').item.json.email.subject }}",
+        "emailType": "html",
+        "message": "={{ $('Split out events').item.json.email.html }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Fieldfare"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "id": "ff-7",
+      "name": "Telegram alert?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c6",
+              "leftValue": "={{ !!$('Split out events').item.json.telegram }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "ff-8",
+      "name": "Alert the owner",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        -100
+      ],
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "={{ $('Split out events').item.json.telegram }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "id": "ff-9",
+      "name": "Sheet row?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c8",
+              "leftValue": "={{ !!$('Split out events').item.json.sheet }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "ff-10",
+      "name": "Sheet row",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -100
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ JSON.stringify($('Split out events').item.json.sheet.row) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "ff-11",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1980,
+        -100
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_GOOGLE_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('Split out events').item.json.sheet.tab }}"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "id": "ff-12",
+      "name": "Mark as done",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://fieldfare-brunch.peaceomachunyiejiga.workers.dev/api/outbox/ack",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ ids: [$('Split out events').item.json.id] }) }}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Fieldfare API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every minute": {
+      "main": [
+        [
+          {
+            "node": "Get new events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get new events": {
+      "main": [
+        [
+          {
+            "node": "Split out events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split out events": {
+      "main": [
+        [
+          {
+            "node": "Email to send?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email to send?": {
+      "main": [
+        [
+          {
+            "node": "Email the guest",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram alert?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email the guest": {
+      "main": [
+        [
+          {
+            "node": "Telegram alert?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram alert?": {
+      "main": [
+        [
+          {
+            "node": "Alert the owner",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sheet row?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert the owner": {
+      "main": [
+        [
+          {
+            "node": "Sheet row?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheet row?": {
+      "main": [
+        [
+          {
+            "node": "Sheet row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark as done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheet row": {
+      "main": [
+        [
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Mark as done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/London",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "FfErrorAlerts001"
+  },
+  "pinData": {},
+  "active": false
+}

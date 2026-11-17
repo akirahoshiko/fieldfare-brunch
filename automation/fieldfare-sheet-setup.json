@@ -1,0 +1,124 @@
+{
+  "id": "FfSheetSetup0001",
+  "name": "Fieldfare · One-time sheet setup",
+  "nodes": [
+    {
+      "id": "ff-23",
+      "name": "About",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -240
+      ],
+      "parameters": {
+        "content": "## Fieldfare: one-time sheet setup\nRun once. Creates a Google Sheet called \"Fieldfare\" with three tabs (Orders, Daily summary, Mailing list) and their header rows. Copy the new sheet's id into the two main workflows (or into automation/local.json and rebuild).",
+        "width": 480,
+        "height": 200
+      }
+    },
+    {
+      "id": "ff-24",
+      "name": "Run once",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "ff-25",
+      "name": "Create the sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "Fieldfare",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "Orders"
+            },
+            {
+              "title": "Daily summary"
+            },
+            {
+              "title": "Mailing list"
+            }
+          ]
+        },
+        "options": {
+          "locale": "en_GB"
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "id": "ff-26",
+      "name": "Write header rows",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ `https://sheets.googleapis.com/v4/spreadsheets/${$json.spreadsheetId}/values:batchUpdate` }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"valueInputOption\":\"RAW\",\"data\":[{\"range\":\"Orders!A1:I1\",\"values\":[[\"placed_at\",\"order\",\"pickup\",\"name\",\"phone\",\"email\",\"items\",\"total_gbp\",\"notes\"]]},{\"range\":\"'Daily summary'!A1:H1\",\"values\":[[\"day\",\"orders\",\"items\",\"takings_gbp\",\"expected_gbp\",\"not_collected\",\"cancelled\",\"best_sellers\"]]},{\"range\":\"'Mailing list'!A1:B1\",\"values\":[[\"signed_up\",\"email\"]]}]}",
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Run once": {
+      "main": [
+        [
+          {
+            "node": "Create the sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the sheet": {
+      "main": [
+        [
+          {
+            "node": "Write header rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/London"
+  },
+  "pinData": {},
+  "active": false
+}

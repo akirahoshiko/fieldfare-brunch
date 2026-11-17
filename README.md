@@ -59,18 +59,29 @@ Set these in Cloudflare (Workers & Pages > fieldfare-brunch > Settings > Variabl
 npx wrangler deploy
 ```
 
-## n8n
+## n8n automations
 
-n8n runs on a local PC and polls the site, so no tunnel is needed. The site never waits for n8n: messages queue until they are collected.
+n8n runs on a local PC and collects work from the site, so no tunnel or webhook is needed. The site never waits for n8n: if the PC is off, messages queue and go out when it's back. The site writes every email, Telegram message and sheet row itself (`src/messages.ts`); n8n only delivers them.
 
-- `GET /api/outbox` with `Authorization: Bearer <OUTBOX_TOKEN>` returns unsent events:
-  - `order_placed`: send the confirmation email (only when the guest gave an email)
-  - `order_ready`: send the "your order is ready" email
-  - `big_order`: Telegram alert to the owner (£60 or more, or 10 items or more)
-  - `newsletter_signup`: add the email to the mailing list sheet
-  - `order_late`: Telegram alert when an order has waited too long
-- `POST /api/outbox/ack` with `{ "ids": [1, 2, 3] }` marks events as sent.
-- `GET /api/summary?day=YYYY-MM-DD` returns the day's orders, takings and best sellers for the end-of-day report.
+| Workflow | When | What it does |
+|---|---|---|
+| Order messages | Every minute | Confirmation email, "your order is ready" email, Telegram alerts for big orders (£60 or 10 items) and orders waiting too long, and rows in the Orders and Mailing list tabs. An event is marked done only after every step works, so a failed step is retried next minute |
+| End-of-day summary | Daily at 3:30pm London | Telegram summary (orders, takings, best sellers) and a row in the Daily summary tab. Quiet on closed days with no orders |
+| Error alerts | When a workflow fails | Telegram message naming the workflow and the step |
+| One-time sheet setup | Once, by hand | Creates the "Fieldfare" Google Sheet with its three tabs and header rows |
+
+API used by n8n, with the header `Authorization: Bearer <OUTBOX_TOKEN>`:
+
+- `GET /api/outbox` returns up to 50 events. Each has `email` (to, subject, html), `telegram` (text) and `sheet` (tab, row); any of them can be empty.
+- `POST /api/outbox/ack` with `{ "ids": [1, 2] }` marks events as sent.
+- `GET /api/summary?day=YYYY-MM-DD` returns the day's report with ready-made `telegram` text and `sheet` row.
+
+Setup:
+
+1. In n8n, create a Header Auth credential named "Fieldfare API" (name `Authorization`, value `Bearer <OUTBOX_TOKEN>`), plus Gmail, Google Sheets and Telegram credentials.
+2. Run `node automation/build-workflows.mjs`, import the four `automation/fieldfare-*.json` files, and choose your credentials in each node.
+3. Run "One-time sheet setup", then put the new sheet's id and your Telegram chat id into the two main workflows (or into `automation/local.json` and rebuild).
+4. Publish "Order messages", "End-of-day summary" and "Error alerts".
 
 ## Photos
 
