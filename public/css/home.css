@@ -157,3 +157,5 @@
   .foot .fgrid{grid-template-columns:1fr}
   .band-card{padding:20px}
 }
+.foot .nl-note{font-size:12.5px;color:rgba(247,243,236,.6);margin-top:8px}
+.foot .nl-note a{text-decoration:underline}

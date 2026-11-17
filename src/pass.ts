@@ -173,6 +173,8 @@ export class Pass extends DurableObject<Env> {
     if (recent >= RATE_LIMIT) return { ok: false, error: "You've placed a few orders in a short time. Please wait a few minutes, or give us a call." };
     this.sql.exec("INSERT INTO rate (ip, ts) VALUES (?, ?)", ipHash, now);
 
+    // Orders are kept for 12 months, as the privacy page says.
+    this.sql.exec("DELETE FROM orders WHERE created < ?", now - 365 * 86_400_000);
     const number = (this.sql.exec<{ n: number }>("SELECT COALESCE(MAX(number), 0) AS n FROM orders WHERE day = ?", day).toArray()[0]?.n ?? 0) + 1;
     const id = crypto.randomUUID(), token = randomToken();
     this.sql.exec(

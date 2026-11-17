@@ -247,7 +247,7 @@
       '<div class="field"><label for="fNotes">Notes for the kitchen <small>(optional)</small></label><textarea id="fNotes" maxlength="300" placeholder="Allergies or anything else we should know">' + esc(info.notes) + "</textarea></div>" +
       '<div class="tot"><span>' + n + (n === 1 ? " item" : " items") + ", pay at pickup</span><b>" + gbp(total()) + "</b></div>" +
       '<p class="notice err form-error" id="eForm" hidden></p>' +
-      '<button class="btn btn-primary wide" type="button" id="place"' + (busy ? " disabled" : "") + ">" + (busy ? "Sending your order…" : "Place order") + '</button><p class="fine">By placing your order you agree to collect and pay for it at the counter.</p>';
+      '<button class="btn btn-primary wide" type="button" id="place"' + (busy ? " disabled" : "") + ">" + (busy ? "Sending your order…" : "Place order") + '</button><p class="fine">By placing your order you agree to collect and pay for it at the counter. We use your details only for this order. <a href="/privacy" target="_blank" style="text-decoration:underline">Privacy</a></p>';
   }
   function loadSlots() {
     slots = null; draw();

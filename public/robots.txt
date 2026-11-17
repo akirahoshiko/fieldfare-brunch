@@ -3,3 +3,5 @@ Disallow: /kitchen
 Disallow: /owner
 Disallow: /order/
 Disallow: /api/
+
+Sitemap: https://fieldfare-brunch.peaceomachunyiejiga.workers.dev/sitemap.xml

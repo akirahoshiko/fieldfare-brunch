@@ -12,7 +12,7 @@
   var pad = function (n) { return String(n).padStart(3, "0"); };
   var LONDON = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
   function londonMin() { var p = LONDON.formatToParts(new Date()), h = 0, m = 0; p.forEach(function (x) { if (x.type === "hour") h = +x.value; if (x.type === "minute") m = +x.value; }); return h * 60 + m; }
-  function clockLabel(min) { var h = Math.floor(min / 60), m = min % 60; return h + ":" + String(m).padStart(2, "0"); }
+  function clockLabel(min) { var h = Math.floor(min / 60), m = min % 60; return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"); }
 
   var orders = {}, recall = [], soldOut = [], paused = false, menu = null;
   var ws = null, live = false, retry = 0, audio = null, wake = null, seen = {}, firstSnapshot = true;
