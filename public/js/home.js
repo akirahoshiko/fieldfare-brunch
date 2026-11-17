@@ -52,6 +52,7 @@
     else if (st.asapOpen) h.innerHTML = '<span><span class="live"></span>Open now, food ready in about ' + st.waitMin + " minutes</span><span>" + ic("clock") + "Today until " + esc(st.closesAt) + "</span>";
     else h.innerHTML = '<span><span class="closed"></span>' + esc(st.label) + "</span>" + (st.orderDay ? "<span>" + ic("clock") + "You can order ahead for " + esc(st.orderDay.label) + "</span>" : "");
     $("#stripWait").textContent = st.asapOpen ? "Ready in about " + st.waitMin + " minutes" : "Order ahead";
+    $("#stripWaitSub").textContent = st.asapOpen ? "Or choose a later time" : "Pick a time that suits you";
     $("#hours").innerHTML = st.hours.map(function (d) { return '<li class="' + (d.today ? "today " : "") + (d.hours === "Closed" ? "closed" : "") + '"><span>' + esc(d.day) + (d.today ? " (today)" : "") + "</span><span>" + esc(d.hours) + "</span></li>"; }).join("");
     $("#lastOrder").textContent = st.lastOrderNote;
     $("#menuNotice").innerHTML = st.paused ? '<div class="notice" style="margin-bottom:20px">' + ic("alert") + "<span>" + esc(st.label) + " You can still look through the menu.</span></div>" : "";
