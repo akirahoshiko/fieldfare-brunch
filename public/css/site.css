@@ -96,14 +96,18 @@ h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.005em;margin:
 .cover .when{font-size:14px;color:var(--leaf);font-weight:600}
 .cover p{margin:0;font-size:14.5px;color:rgba(247,243,236,.85)}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 1px 0 var(--line),0 20px 36px -30px rgba(22,48,31,.45);display:grid;grid-template-columns:120px minmax(0,1fr)}
-.card .ph{position:relative;min-height:148px;border:0;padding:0;background:var(--sage);cursor:pointer;overflow:hidden}
+.card{position:relative;cursor:pointer;transition:box-shadow .25s,transform .25s;background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 1px 0 var(--line),0 20px 36px -30px rgba(22,48,31,.45);display:grid;grid-template-columns:120px minmax(0,1fr)}
+.card .ph{position:relative;min-height:148px;background:var(--sage);overflow:hidden}
 .card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .card:hover .ph img{transform:scale(1.05)}
+.card:hover{transform:translateY(-2px);box-shadow:0 1px 0 var(--line),0 26px 40px -28px rgba(22,48,31,.55)}
+.card:has(.nm:focus-visible){outline:2px solid var(--gold);outline-offset:3px}
 .card .bd{padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
 .card .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .card .nm{font:600 22px/1.15 var(--serif);border:0;background:none;padding:0;text-align:left;color:inherit;cursor:pointer}
-.card .nm:hover{color:var(--green2);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.card .nm::after{content:"";position:absolute;inset:0;z-index:1}
+.card .nm:focus-visible{outline:none}
+.card:hover .nm{color:var(--green2);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
 .price{font-weight:600;font-size:15px;white-space:nowrap}
 .card .ds{font-size:14px;color:var(--mute);line-height:1.5;margin:0}
 .card .ft{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:10px}
@@ -111,12 +115,11 @@ h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.005em;margin:
 .tag{font-size:12px;font-weight:600;border-radius:99px;padding:2px 9px;background:#EEF2E4;color:#3F5A33}
 .tag.hot{background:#F8E3DC;color:var(--red)}
 .tag.flag{background:#F6EACB;color:#6B5212}
-.add{display:inline-flex;align-items:center;gap:6px;min-height:36px;border-radius:99px;border:0;background:var(--green);color:var(--cream);padding:0 14px;font:600 13.5px var(--sans);cursor:pointer;flex:none}
-.add:hover{background:var(--green2)}
-.add svg.i{width:15px;height:15px}
-.card.sold .ph{cursor:default}
+.card.sold{cursor:default}
+.card.sold:hover{transform:none;box-shadow:0 1px 0 var(--line),0 20px 36px -30px rgba(22,48,31,.45)}
+.card.sold:hover .ph img{transform:none}
 .card.sold .ph img{filter:grayscale(1);opacity:.6}
-.card.sold .nm{cursor:default;text-decoration:none;color:var(--mute)}
+.card.sold .nm,.card.sold:hover .nm{cursor:default;text-decoration:none;color:var(--mute)}
 .soldtag{font-size:13px;font-weight:600;color:var(--red)}
 .allergy{margin-top:20px;font-size:14px;color:var(--mute)}
 .allergy a{color:var(--green2);text-decoration:underline;text-underline-offset:3px}
