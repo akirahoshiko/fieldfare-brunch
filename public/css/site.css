@@ -176,7 +176,9 @@ dialog::backdrop{background:rgba(14,30,21,.55)}
 .dwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-height:calc(100svh - 24px)}
 .dimg{position:relative;min-height:320px}
 .dimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.dbody{padding:26px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.dbody{padding:26px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;max-height:calc(100svh - 24px);overscroll-behavior:contain}
+/* keep the page behind still while the dish pop-up or order panel is open */
+html:has(dialog[open]){overflow:hidden}
 .dbody h3{font-size:34px;line-height:1.05;padding-right:44px}
 .dbody .lead{margin:0;color:var(--mute);font-size:15.5px}
 .allergen{font-size:14px;color:var(--mute);background:var(--card);border-radius:12px;padding:10px 12px}
@@ -205,7 +207,7 @@ dialog::backdrop{background:rgba(14,30,21,.55)}
 
 /* order panel (order, details, confirmation) */
 dialog.panel{margin:0 0 0 auto;height:100%;max-height:100%;width:min(440px,100%);background:var(--cream)}
-.pn{display:flex;flex-direction:column;height:100%;padding:22px 22px calc(22px + env(safe-area-inset-bottom,0px));padding-top:calc(22px + env(safe-area-inset-top,0px));gap:16px;overflow-y:auto}
+.pn{display:flex;flex-direction:column;height:100%;overscroll-behavior:contain;padding:22px 22px calc(22px + env(safe-area-inset-bottom,0px));padding-top:calc(22px + env(safe-area-inset-top,0px));gap:16px;overflow-y:auto}
 .pn header{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .pn h3{font-size:30px}
 .back{border:0;background:none;color:var(--green2);font:600 14px var(--sans);cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:6px}
@@ -265,9 +267,9 @@ dialog.panel{margin:0 0 0 auto;height:100%;max-height:100%;width:min(440px,100%)
 }
 @media (max-width:700px){
   .cards{grid-template-columns:1fr}
-  .dwrap{grid-template-columns:1fr;overflow-y:auto}
+  .dwrap{grid-template-columns:1fr;overflow-y:auto;overscroll-behavior:contain}
   .dimg{min-height:220px;height:220px}
-  .dbody{overflow:visible}
+  .dbody{overflow:visible;max-height:none}
   .dfoot{bottom:0}
   .hero::after{background:linear-gradient(180deg,rgba(14,30,21,.55) 0%,rgba(14,30,21,.88) 60%)}
   .hero{align-items:flex-end}
